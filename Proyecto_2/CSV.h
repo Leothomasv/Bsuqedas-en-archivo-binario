@@ -9,6 +9,8 @@
 struct WHO
 {
 
+    
+
     char Date_Reported [11];
     char Country_Code [3];
     char Country [50];

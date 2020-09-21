@@ -9,48 +9,6 @@
 
 namespace CSV = rapidcsv;
 
-
-void find(){
-    
-    std::ifstream inFile;
-    inFile.open("WHO.bin", std::ios::in | std::ios::binary);
-
-    WHO obj;
-    inFile.seekg(0, std::ios::beg);
-    
-    int suma = 0;
-    
- 
-
-    char pais[50] = "BD";
-    char fecha[12] = "2020-04-10";
-    inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
-
-    while (!inFile.eof())
-    {
-        //std::cout << obj.Country << std::endl;
-        if (strcmp(obj.Country_Code, pais) == 0) {
-            std::cout << obj.Date_Reported << " ";
-            std::cout << obj.Country_Code  << " ";
-            std::cout << obj.Country << " ";
-            std::cout << obj.WHO_region << " ";
-            std::cout << obj.New_cases << " ";
-            std::cout << obj.Cumulative_cases << " ";
-            std::cout << obj.New_deaths << " ";
-            std::cout << obj.Cumulative_deaths << std::endl;
-            suma++;
-        }
-        inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
-    }
-
-    std::cout << "Cantidad: " << suma << std::endl;
-
-    inFile.close();
-    
-}
-
-
-
 int main (int argc, char *argv[]){
 
     if(argc == 1 ){
@@ -69,6 +27,8 @@ int main (int argc, char *argv[]){
     char opcion[12];
     strcpy(opcion, argv[1]);
 
+
+    //convertir el archivo a binario
     if(strcmp(opcion, "convert") == 0){
         ope.convert();
     }
@@ -106,7 +66,7 @@ int main (int argc, char *argv[]){
 
                 while (!inFile.eof())
                 {
-                    //Busqueda por pais
+                    //Busqueda por pais //PRINCIPAL
                     if (strcmp(obj.Country, pais) == 0) {
                         std::cout << obj.Date_Reported << " ";
                         std::cout << obj.Country_Code  << " ";
@@ -119,9 +79,10 @@ int main (int argc, char *argv[]){
                     }
                     inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
                 }
+                return 0;
 
             }else if (argc == 6){
-                char NumericType [15];
+                char NumericType [30];
                 strcpy(NumericType, argv[3]);
 
                 char MasMenos[7];
@@ -129,6 +90,7 @@ int main (int argc, char *argv[]){
 
                 int cantidad;
                 cantidad = std::stoi(argv[5]);
+                
 
                 while (!inFile.eof())
                 {
@@ -137,7 +99,6 @@ int main (int argc, char *argv[]){
                         std::cout << obj.Date_Reported << " ";
                         std::cout << obj.Country_Code  << " ";
                         std::cout << obj.Country << " ";
-                        std::cout << obj.WHO_region << " ";
                         std::cout << "New Cases: " << obj.New_cases << " ";
                         std::cout << std::endl;
 
@@ -145,7 +106,6 @@ int main (int argc, char *argv[]){
                         std::cout << obj.Date_Reported << " ";
                         std::cout << obj.Country_Code  << " ";
                         std::cout << obj.Country << " ";
-                        std::cout << obj.WHO_region << " ";
                         std::cout << "New Cases: " << obj.New_cases << " ";
                         std::cout << std::endl;
 
@@ -153,24 +113,146 @@ int main (int argc, char *argv[]){
                         std::cout << obj.Date_Reported << " ";
                         std::cout << obj.Country_Code  << " ";
                         std::cout << obj.Country << " ";
-                        std::cout << obj.WHO_region << " ";
                         std::cout << "New Cases: " << obj.New_cases << " ";
+                        std::cout << std::endl;
+                    }
+
+                    //Busqueda por pais y por dato numerico //CUMULATIVE_CASES
+                    if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "Cumulative_Cases") == 0 && strcmp(MasMenos, "mayor") == 0 && obj.Cumulative_cases > cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "Cumulative Cases: " << obj.Cumulative_cases << " ";
+                        std::cout << std::endl;
+
+                    }else if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "Cumulative_Cases") == 0 && strcmp(MasMenos, "menor") == 0 && obj.Cumulative_cases < cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "Cumulative Cases: " << obj.Cumulative_cases << " ";
+                        std::cout << std::endl;
+
+                    }else if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "Cumulative_Cases") == 0 && strcmp(MasMenos, "igual") == 0 && obj.Cumulative_cases == cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "Cumulative Cases: " << obj.Cumulative_cases << " ";
+                        std::cout << std::endl;
+                    }
+
+                    //Busqueda por pais y por dato numerico //NEW_DEATHS
+                    if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "New_Deaths") == 0 && strcmp(MasMenos, "mayor") == 0 && obj.New_deaths > cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "New Deaths: " << obj.New_deaths << " ";
+                        std::cout << std::endl;
+
+                    }else if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "New_Deaths") == 0 && strcmp(MasMenos, "menor") == 0 && obj.New_deaths < cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "New Deaths: " << obj.New_deaths << " ";
+                        std::cout << std::endl;
+
+                    }else if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "New_Deaths") == 0 && strcmp(MasMenos, "igual") == 0 && obj.New_deaths == cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "New Deaths: " << obj.New_deaths << " ";
+                        std::cout << std::endl;
+                    }
+
+
+                    //Busqueda por pais y por dato numerico //CUMULATIVE_DEATHS
+                    if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "Cumulative_Deaths") == 0 && strcmp(MasMenos, "mayor") == 0 && obj.Cumulative_deaths > cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "Cumulative Deaths: " << obj.Cumulative_deaths << " ";
+                        std::cout << std::endl;
+
+                    }else if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "Cumulative_Deaths") == 0 && strcmp(MasMenos, "menor") == 0 && obj.Cumulative_deaths < cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "Cumulative Deaths: " << obj.Cumulative_deaths << " ";
+                        std::cout << std::endl;
+
+                    }else if (strcmp(obj.Country, pais) == 0 && strcmp(NumericType, "Cumulative_Deaths") == 0 && strcmp(MasMenos, "igual") == 0 && obj.Cumulative_deaths == cantidad) {
+                        std::cout << obj.Date_Reported << " ";
+                        std::cout << obj.Country_Code  << " ";
+                        std::cout << obj.Country << " ";
+                        std::cout << "Cumulative Deaths: " << obj.Cumulative_deaths << " ";
                         std::cout << std::endl;
                     }
                     //fin
                     inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
                 }
+                    //HACER GRAPH AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+                    char op[3];
+                    std::cout << "QUIERE GRAFICAR? "<<std::endl;
+                    std::cout << "SI? No?: ";
+                    std::cin >> op;
+                    if(strcmp(op, "si") == 0){
+                        std::cout << "Hacer graph" << std::endl;
+                    }else{
+                        return 0;
+                    }
             }
 
             inFile.close();   
     }
 
-        //podria crear una funcion para la graph
-        /*if(argv[7] == "graph"){
-            //hacer graph
-        }*/
+    //BUSQUEDAS POR FECHA
+
+    if(strcmp(opcion, "fecha") == 0){
+
+        std::cout << "Entramos a las fechas" << std::endl;
+
+        std::ifstream inFile;
+        inFile.open("WHO.bin", std::ios::in | std::ios::binary);
+
+        WHO obj;
+        inFile.seekg(0, std::ios::beg);
+
+        char pais[50];
+        strcpy(pais, argv[2]);
+        
+        char FechaInicial[12];
+        strcpy(FechaInicial, argv[3]);
+
+        char FechaFinal[12];
+        strcpy(FechaFinal, argv[4]);
+
+        inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
+
+        if(argc == 5){
+
+            if(strcmp(obj.Country, pais) == 0 && strcmp(obj.Date_Reported, FechaInicial) == 0){
+
+                while(!inFile.eof()){
+
+                    std::cout << obj.Date_Reported << " ";
+                    std::cout << obj.Country_Code  << " ";
+                    std::cout << obj.Country << " ";
+                    std::cout << obj.WHO_region << " ";
+                    std::cout << obj.New_cases << " ";
+                    std::cout << obj.Cumulative_cases << " ";
+                    std::cout << obj.New_deaths << " ";
+                    std::cout << obj.Cumulative_deaths << std::endl;
+
+                    if(strcmp(obj.Date_Reported, FechaFinal) == 0){
+                        return 0;
+                    }
+
+                }
+                inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
+            }
 
 
+        }
+    }
     return 0;
 }
 
