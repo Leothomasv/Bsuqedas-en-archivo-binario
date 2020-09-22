@@ -22,9 +22,15 @@ void OperacionesCSV::convert(){
     std::string Country;
     std::string region;
 
+    w.setSignature("ESTR");
+    w.setName("Estructura de Datos II");
+    w.size = 0xdeadbeef;
+    w.crc =CRC::Calculate(reinterpret_cast<char*>(&w), sizeof(WHO) - sizeof(uint32_t), CRC::CRC_32());
+
     for(int i = 0; i < doc.GetRowCount(); i++){
            
                 //std::cout << doc.GetCell<std::string>(j, i) << " ";
+
 
                 date = doc.GetCell<std::string>(0, index);
                 const char* ConvDate = date.c_str();

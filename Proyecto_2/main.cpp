@@ -58,7 +58,6 @@ int main (int argc, char *argv[]){
             char pais[50];
             strcpy(pais, argv[2]);
             
-        
     
             inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
 
@@ -208,8 +207,6 @@ int main (int argc, char *argv[]){
 
     if(strcmp(opcion, "fecha") == 0){
 
-        std::cout << "Entramos a las fechas" << std::endl;
-
         std::ifstream inFile;
         inFile.open("WHO.bin", std::ios::in | std::ios::binary);
 
@@ -219,20 +216,53 @@ int main (int argc, char *argv[]){
         char pais[50];
         strcpy(pais, argv[2]);
         
-        char FechaInicial[12];
+        char FechaInicial[11];
         strcpy(FechaInicial, argv[3]);
 
-        char FechaFinal[12];
+        char FechaFinal[11];
         strcpy(FechaFinal, argv[4]);
+
+        bool key = true;
+        
+        int pos;
+
+        
 
         inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
 
         if(argc == 5){
 
-            if(strcmp(obj.Country, pais) == 0 && strcmp(obj.Date_Reported, FechaInicial) == 0){
+            //Primer While
+            while (!inFile.eof() && key){
 
-                while(!inFile.eof()){
+                if( (strcmp(obj.Country, pais)==0 && strcmp(obj.Date_Reported, FechaInicial)==0)){
+                    std::cout << obj.Date_Reported << " ";
+                    std::cout << obj.Country_Code  << " ";
+                    std::cout << obj.Country << " ";
+                    std::cout << obj.WHO_region << " ";
+                    std::cout << obj.New_cases << " ";
+                    std::cout << obj.Cumulative_cases << " ";
+                    std::cout << obj.New_deaths << " ";
+                    std::cout << obj.Cumulative_deaths << std::endl;
 
+                    key = false;
+                    pos = inFile.tellg();
+
+                    if(strcmp(obj.Date_Reported, FechaFinal) == 0){
+                        return 0;
+                    }
+                }
+                inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
+
+            }
+
+            //Segundo while
+
+            inFile.seekg(pos);
+
+            while(!inFile.eof()){
+
+                if(strcmp(obj.Country, pais) == 0){
                     std::cout << obj.Date_Reported << " ";
                     std::cout << obj.Country_Code  << " ";
                     std::cout << obj.Country << " ";
@@ -245,13 +275,14 @@ int main (int argc, char *argv[]){
                     if(strcmp(obj.Date_Reported, FechaFinal) == 0){
                         return 0;
                     }
-
+                    
                 }
                 inFile.read(reinterpret_cast<char*>(&obj), sizeof(WHO));
             }
+        }//if de argumento
 
 
-        }
+        inFile.close();
     }
     return 0;
 }
